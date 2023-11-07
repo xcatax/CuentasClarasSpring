@@ -1,0 +1,5 @@
+target/**
+/bin/
+target/m2e-wtp/web-resources/META-INF/maven/CuentasClaras/CuentasClaras/pom.properties
+/target/m2e-wtp/web-resources/META-INF/maven/CuentasClaras/CuentasClaras/pom.properties
+/target/
