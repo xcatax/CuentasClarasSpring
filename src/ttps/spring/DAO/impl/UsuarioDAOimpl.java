@@ -2,13 +2,14 @@ package ttps.spring.DAO.impl;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import ttps.spring.model.*;
-import ttps.spring.DAO.*;
+import org.springframework.stereotype.Repository;
 
+import ttps.spring.DAO.*;
+import ttps.spring.model.*;
+
+@Repository
 public class UsuarioDAOimpl extends GenericDAOimpl<Usuario> implements UsuarioDAO{
 		
 		public UsuarioDAOimpl() {
@@ -17,8 +18,7 @@ public class UsuarioDAOimpl extends GenericDAOimpl<Usuario> implements UsuarioDA
 
 		public Usuario buscarUsuarioPorMail(String email) {
 			try { 
-				Query consulta = Factory.getEntityManagerFactory().createEntityManager().
-				createQuery("select u from Usuario u where u.email =:email");
+				Query consulta = getEntityManager().createQuery("select u from Usuario u where u.email =:email");
 				consulta.setParameter("email", email);
 				return (Usuario)consulta.getSingleResult();
 				
@@ -32,15 +32,12 @@ public class UsuarioDAOimpl extends GenericDAOimpl<Usuario> implements UsuarioDA
 		public List<Grupo> obtenerGruposDelUsuarioPorId(long usuarioId) {
 		    try {
 		    	
-
-		        EntityManager em = Factory.getEntityManagerFactory().createEntityManager();
-		        Usuario usuario = em.find(Usuario.class, usuarioId); // Buscar al usuario por su ID
+		        Usuario usuario = getEntityManager().find(Usuario.class, usuarioId); // Buscar al usuario por su ID
 		        List<Grupo> grupos = usuario.getGrupos(); // Obtener la lista de grupos del usuario
-		        em.close();
+		        //getEntityManager().close(); supongo no va mas no?
 		        return grupos;
 		    } catch (Exception e) {
 		    	System.out.println("EXCEPCION " + e);
-
 		        e.printStackTrace();
 		        return null; // Manejar cualquier excepción y devolver null si algo sale mal
 		    }

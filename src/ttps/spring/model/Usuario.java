@@ -159,8 +159,6 @@ public class Usuario {
 
 */
 	
-	
-
 	/*metodos*/
 	public void agregarAmigo(Usuario amigo) {// agrega un usuario a la lista de amigos
 		this.amigos.add(amigo);
@@ -170,7 +168,7 @@ public class Usuario {
 	// CategoriaGrupo categoria agregar luego
 	
 	//llama al constructor de grupo y lo guarda en la base
-	public Grupo registrarGrupo (String nombre,byte imagen) {	
+/*	public Grupo registrarGrupo (String nombre,byte imagen) {	
 		
 		try {
 			UsuarioDAOimpl uDAO = new UsuarioDAOimpl();	    // Crear una instancia del DAO de Usuario	
@@ -189,7 +187,7 @@ public class Usuario {
 			e.printStackTrace();
 			return null;
 		}	
-	}
+	}*/
 	
 		
 	public List<Grupo> getGrupos() {

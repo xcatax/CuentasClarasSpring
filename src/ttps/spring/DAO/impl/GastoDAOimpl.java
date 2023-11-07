@@ -3,11 +3,12 @@ package ttps.spring.DAO.impl;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-import DAO.GastoDAO;
-import entidades.Gasto;
-import entidades.Usuario;
-import inicio.Factory;
+import org.springframework.stereotype.Repository;
 
+import ttps.spring.DAO.*;
+import ttps.spring.model.*;
+
+@Repository
 public class GastoDAOimpl extends GenericDAOimpl<Gasto> implements GastoDAO{
 		
 		public GastoDAOimpl() {
@@ -17,9 +18,7 @@ public class GastoDAOimpl extends GenericDAOimpl<Gasto> implements GastoDAO{
 		@Override
 		public Gasto buscarGastoPorNombre(String nombre) {
 			try { 
-				Query consulta = Factory.getEntityManagerFactory().createEntityManager().
-				createQuery("select g from Gasto g where g.nombre =:nombre");
-				consulta.setParameter("nombre", nombre);
+				Query consulta = this.getEntityManager().createQuery("select g from Gasto g where g.nombre =:nombre");
 				return (Gasto)consulta.getSingleResult();
 				
 			} catch (NoResultException e) {

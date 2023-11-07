@@ -7,7 +7,7 @@ public interface GenericDAO<T> {
 	
 	List<T> listar();
 	
-	public T guardar(T base);
+	public T guardar(T entidad);
 	
 	T actualizar(T entidad);
 

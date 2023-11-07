@@ -3,16 +3,12 @@ package ttps.spring.DAO.impl;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-//import javax.persistence.EntityManager;
-//import javax.persistence.EntityTransaction;
-//import javax.persistence.Query;
+import org.springframework.stereotype.Repository;
 
-import DAO.GrupoDAO;
-import entidades.Gasto;
-import entidades.Grupo;
+import ttps.spring.DAO.*;
+import ttps.spring.model.*;
 
-import inicio.Factory;
-
+@Repository
 public class GrupoDAOimpl extends GenericDAOimpl<Grupo> implements GrupoDAO{
 		
 		public GrupoDAOimpl() {
@@ -22,8 +18,7 @@ public class GrupoDAOimpl extends GenericDAOimpl<Grupo> implements GrupoDAO{
 		@Override
 		public Grupo buscarGrupoPorNombre(String nombre) {
 			try { 
-				Query consulta = Factory.getEntityManagerFactory().createEntityManager().
-				createQuery("select g from Grupo g where g.nombre =:nombre");
+				Query consulta = getEntityManager().createQuery("select g from Grupo g where g.nombre =:nombre");
 				consulta.setParameter("nombre", nombre);
 				return (Grupo)consulta.getSingleResult();
 				
