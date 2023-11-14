@@ -1,4 +1,4 @@
-package ttps.spring.DAO.impl;
+package ttps.spring.impl;
 
 import org.springframework.stereotype.Repository;
 

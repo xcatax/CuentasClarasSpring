@@ -1,4 +1,4 @@
-package ttps.spring.DAO.impl;
+package ttps.spring.impl;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;

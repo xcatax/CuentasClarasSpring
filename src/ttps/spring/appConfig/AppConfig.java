@@ -1,4 +1,4 @@
-package ttps.spring.config;
+package ttps.spring.appConfig;
 
 import java.util.List;
 

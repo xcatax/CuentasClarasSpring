@@ -1,4 +1,4 @@
-package ttps.spring.DAO.impl;
+package ttps.spring.impl;
 
 import java.util.List;
 
