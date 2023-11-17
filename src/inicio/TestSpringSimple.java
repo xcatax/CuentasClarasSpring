@@ -15,7 +15,7 @@ public class TestSpringSimple {
 		ctx.register(ttps.spring.config.PersistenceConfig.class);
 		
 		// Busca clases anotadas en el paquete base pasado por parámetro
-		ctx.scan("ttps.spring.DAO","ttps.spring.impl","ttps.spring.model");
+		ctx.scan("ttps.spring.DAO","ttps.spring.impl","ttps.spring.model","ttps.spring.controller");
 		
 		ctx.refresh();
 		
