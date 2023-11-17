@@ -10,5 +10,6 @@ import ttps.spring.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	Usuario findByNombre(String nombre);
 	List<Usuario> findAll(); 
+	Usuario save(Usuario usuario);
 
 }
