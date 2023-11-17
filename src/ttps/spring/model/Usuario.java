@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import ttps.spring.DAO.*;
 import ttps.spring.model.*;
 
 
