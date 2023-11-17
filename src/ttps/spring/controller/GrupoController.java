@@ -1,7 +1,7 @@
 package ttps.spring.controller;
 
 import ttps.spring.model.*;
-import ttps.spring.repository.UsuarioRepository;
+import ttps.spring.repository.GrupoRepository;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -19,29 +19,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.MediaType; // Asegúrate de importar MediaType
 
 @RestController
-@RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UsuarioController {
+@RequestMapping(value = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class GrupoController {
 
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private GrupoRepository grupoRepository;
 
-	@PostMapping("/registrarUsuario")
+	@PostMapping("/crearGrupo")
 	@Transactional
-	public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
+	public ResponseEntity<String> crearGrupo(@RequestBody Grupo grupo) {
 
-		System.out.println("Creando el usuario    " + usuario.getEmail());
+		System.out.println("Creando el grupo    " + grupo.getNombre());
 
-		 if (usuarioRepository.existsByEmail(usuario.getEmail())) {
-			  System.out.println("Ya existe un usuario con email " + usuario.getEmail());
-			  String message = "Ya existe un usuario con nombre ";
+		 if (grupoRepository.existsByNombre(grupo.getNombre())) {
+			  System.out.println(" nombre del gurpo:  " + grupo.getNombre());
+			  String message = "Ya existe un grupo con nombre ";
 			  return new ResponseEntity<>(message,HttpStatus.CONFLICT); 
 		  }
-		usuarioRepository.save(usuario);
-		String message = "Se guardó el usuario con éxito";
+		 grupoRepository.save(grupo);
+		String message = "Se guardó el grupo con éxito";
 		return new ResponseEntity<>(message, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/listarTodos")
+}
+
+	/*@GetMapping("/listarTodos")
 	public List<Usuario> usuario() {
 		System.out.println("listar");
 		return usuarioRepository.findAll();
@@ -67,11 +69,11 @@ public class UsuarioController {
 		  
 			  return new ResponseEntity<>(HttpStatus.CONFLICT); 
 		  }
-		 */
+		 
 		usuarioRepository.save(usuario);
 		String message = "Se guardó el usuario con éxito";
 		return new ResponseEntity<>(message, HttpStatus.CREATED);
-	}
+	}*/
 
 	/*
 	 * 
@@ -82,4 +84,4 @@ public class UsuarioController {
 	 * this.usuarioRepository = uRepository; }
 	 */
 
-}
+
