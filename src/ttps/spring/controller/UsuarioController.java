@@ -18,57 +18,68 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.MediaType; // Asegúrate de importar MediaType
 
+@RestController
+@RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsuarioController {
 
-	@RestController
-	@RequestMapping(value ="/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
-	public class UsuarioController {
-		
-		@Autowired
-		private UsuarioRepository usuarioRepository;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
-		@PostMapping("/altaUsuario")
-		@Transactional
-		public ResponseEntity<String> altaUsuario(@RequestBody Usuario usuario) {
-			     
-			     System.out.println("Creando el usuario" + usuario.getNombre());
-			   
-			    /*if (usuarioRepository.isUserExist(usuario)) {
-			    	System.out.println("Ya existe un usuario con nombre " + usuario.getNombre());
-			    
-			    	return new ResponseEntity<Usuario>(HttpStatus.CONFLICT); //Código de respuesta 409
-			    }*/
-			    usuarioRepository.save(usuario);
-			    String message= "Se guardó el usuario con éxito";
-			    return new ResponseEntity<>(message, HttpStatus.CREATED);
-			    }
-		
-		
-		@GetMapping("/listarTodos")
-		 public List<Usuario> usuario() {
-			 System.out.println("listar");
-		     return usuarioRepository.findAll();
-			// return null;
-		 }
+	@PostMapping("/registrarUsuario")
+	@Transactional
+	public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
 
-	    @GetMapping("/hello")
-	    public ResponseEntity<String> sayHello() {
-	    	System.out.println("entre");
-	        String message = "Hola Mundo desde el controlador UserController";
-	        return new ResponseEntity<>(message, HttpStatus.OK);
-	    }
-	    
-	    
+		System.out.println("Creando el usuario" + usuario.getNombre());
 
-/*
+		/*  if (usuarioRepository.existByNombre(usuario.getNombre())) {
+			  System.out.println("Ya existe un usuario con nombre " + usuario.getNombre());
+		  
+			  return new ResponseEntity<>(HttpStatus.CONFLICT); 
+		  }*/
+		usuarioRepository.save(usuario);
+		String message = "Se guardó el usuario con éxito";
+		return new ResponseEntity<>(message, HttpStatus.CREATED);
+	}
 
-		public UsuarioRepository getUsuarioRepository() {
-			return usuarioRepository;
-		}
+	@GetMapping("/listarTodos")
+	public List<Usuario> usuario() {
+		System.out.println("listar");
+		return usuarioRepository.findAll();
+		// return null;
+	}
 
-
-		public void setUserRepository(UsuarioRepository uRepository) {
-			this.usuarioRepository = uRepository;
-		}*/
+	@GetMapping("/hello")
+	public ResponseEntity<String> sayHello() {
+		System.out.println("entre");
+		String message = "Hola Mundo desde el controlador UserController";
+		return new ResponseEntity<>(message, HttpStatus.OK);
+	}
 	
- }
+	@PostMapping("/loginUsuario")
+	@Transactional
+	public ResponseEntity<String> loginUsuario(@RequestBody Usuario usuario) {
 
+		System.out.println("probando el exist" );
+		System.out.println(usuario.getNombre());
+		
+		 if (usuarioRepository.existsByNombre(usuario.getNombre())) {
+			  System.out.println("Ya existe un usuario con nombre " + usuario.getNombre());
+		  
+			  return new ResponseEntity<>(HttpStatus.CONFLICT); 
+		  }
+		 
+		usuarioRepository.save(usuario);
+		String message = "Se guardó el usuario con éxito";
+		return new ResponseEntity<>(message, HttpStatus.CREATED);
+	}
+
+	/*
+	 * 
+	 * public UsuarioRepository getUsuarioRepository() { return usuarioRepository; }
+	 * 
+	 * 
+	 * public void setUserRepository(UsuarioRepository uRepository) {
+	 * this.usuarioRepository = uRepository; }
+	 */
+
+}
