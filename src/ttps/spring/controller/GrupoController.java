@@ -1,6 +1,8 @@
 package ttps.spring.controller;
 
 import ttps.spring.model.*;
+import ttps.spring.model.CategoriaGrupo;
+import ttps.spring.repository.CategoriaGrupoRepository;
 import ttps.spring.repository.GrupoRepository;
 
 import org.springframework.web.bind.annotation.*;
@@ -24,64 +26,95 @@ public class GrupoController {
 
 	@Autowired
 	private GrupoRepository grupoRepository;
+	@Autowired
+	private CategoriaGrupoRepository categoriaRepository;
 
 	@PostMapping("/crearGrupo")
 	@Transactional
 	public ResponseEntity<String> crearGrupo(@RequestBody Grupo grupo) {
-
-		System.out.println("Creando el grupo    " + grupo.getNombre());
-
-		 if (grupoRepository.existsByNombre(grupo.getNombre())) {
-			  System.out.println(" nombre del gurpo:  " + grupo.getNombre());
-			  String message = "Ya existe un grupo con nombre ";
-			  return new ResponseEntity<>(message,HttpStatus.CONFLICT); 
-		  }
-		 grupoRepository.save(grupo);
-		String message = "Se guardó el grupo con éxito";
-		return new ResponseEntity<>(message, HttpStatus.CREATED);
+		try {
+			
+			// Verificar si ya existe un grupo con el mismo nombre
+			if (grupoRepository.findByNombre(grupo.getNombre()) != null) {
+				String message = "Existe grupo con ese nombre";
+				return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+			}
+			// Buscar la categoría
+			CategoriaGrupo cat = categoriaRepository.findByNombre(grupo.getCategoria().getNombre());
+			if (cat == null) {
+				String message = "No existe categoria con ese nombre";
+				return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+			}
+			grupo.setCategoria(cat);
+			grupoRepository.save(grupo);
+			String message = "Grupo guardado correctamente";
+			return new ResponseEntity<>(message, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
-}
-
-	/*@GetMapping("/listarTodos")
-	public List<Usuario> usuario() {
+	@GetMapping("/listarTodos")
+	public List<Grupo> grupo() {
 		System.out.println("listar");
-		return usuarioRepository.findAll();
+		return grupoRepository.findAll();
 		// return null;
 	}
 
-	@GetMapping("/hello")
-	public ResponseEntity<String> sayHello() {
-		System.out.println("entre");
-		String message = "Hola Mundo desde el controlador UserController";
-		return new ResponseEntity<>(message, HttpStatus.OK);
-	}
-	
-	@PostMapping("/loginUsuario")
+	@PutMapping("/actualizarGrupo/{id}")
 	@Transactional
-	public ResponseEntity<String> loginUsuario(@RequestBody Usuario usuario) {
+	public ResponseEntity<String> actualizarGrupo(@PathVariable Long id, @RequestBody Grupo nuevoGrupo) {
+	  //  try {
+	        // Verificar si el grupo existe
+	        Grupo grupoExistente = grupoRepository.findById(id);
+			if(grupoExistente != null) {
+				if(nuevoGrupo.getNombre() != null) {
+					System.out.println("Modifica nombre");
+					if (grupoRepository.findByNombre(nuevoGrupo.getNombre()) != null) {
+						String message = "Existe grupo con ese nombre";
+						return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+					}
+					grupoExistente.setNombre(nuevoGrupo.getNombre());
+				}
+				if(nuevoGrupo.getImagen() != 0) {
+			        System.out.println("Modifica imagen");
+					grupoExistente.setImagen(nuevoGrupo.getImagen());
+				}
+				
+				if(nuevoGrupo.getCategoria().getNombre() != null ) {
+			        System.out.println("Modifica categoria");
+			        CategoriaGrupo cat = categoriaRepository.findByNombre(nuevoGrupo.getCategoria().getNombre());
+					if (cat == null) {
+						String message = "No existe categoria con ese nombre";
+						return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+					}
+					grupoExistente.setCategoria(cat);
+				}
+				
+		        grupoRepository.save(grupoExistente);
 
-		System.out.println("probando el exist" );
-		System.out.println(usuario.getNombre());
-		
-	/*	 if (usuarioRepository.existsByNombre(usuario.getNombre())) {
-			  System.out.println("Ya existe un usuario con nombre " + usuario.getNombre());
-		  
-			  return new ResponseEntity<>(HttpStatus.CONFLICT); 
-		  }
-		 
-		usuarioRepository.save(usuario);
-		String message = "Se guardó el usuario con éxito";
-		return new ResponseEntity<>(message, HttpStatus.CREATED);
-	}*/
-
-	/*
-	 * 
-	 * public UsuarioRepository getUsuarioRepository() { return usuarioRepository; }
-	 * 
-	 * 
-	 * public void setUserRepository(UsuarioRepository uRepository) {
-	 * this.usuarioRepository = uRepository; }
-	 */
+			}
+	        
 
 
+  /*
+
+	        // Verificar si ya existe otro grupo con el nuevo nombre
+	        //grupoRepository.findByNombreAndIdNot(nuevoGrupo.getNombre(), id).ifPresent(existingGroup -> {
+
+	        // Actualizar los datos del grupo
+	        grupoExistente.setNombre(nuevoGrupo.getNombre());
+	        grupoExistente.setCategoria(nuevoGrupo.getCategoria());
+	        grupoExistente.setImagen(nuevoGrupo.getImagen());
+
+	        // Guardar el grupo actualizado
+	        grupoRepository.save(grupoExistente);
+
+	        String message = "Grupo actualizado correctamente";
+	        return new ResponseEntity<>(message, HttpStatus.OK);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }*/
+			return null;
+	}
+}

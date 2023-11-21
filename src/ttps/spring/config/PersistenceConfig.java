@@ -39,7 +39,7 @@ public class PersistenceConfig {
 		driverManagerDataSource.setUsername("root");
 		driverManagerDataSource.setPassword("root");
 		driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/cuentasclaras?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
-		driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		driverManagerDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 		return driverManagerDataSource;
 	}
 	

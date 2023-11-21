@@ -28,8 +28,13 @@ public class UsuarioController {
 	@PostMapping("/registrarUsuario")
 	@Transactional
 	public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
-
-		System.out.println("Creando el usuario    " + usuario.getEmail());
+		 System.out.println("Registro" );
+		  if (usuario == null) {
+		        System.out.println("No se han proporcionado parámetros");
+		        String message = "No se han proporcionado parámetros";
+		        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+		    }		
+		  //System.out.println("Creando el usuario    " + usuario.getEmail());
 
 		 if (usuarioRepository.existsByEmail(usuario.getEmail())) {
 			  System.out.println("Ya existe un usuario con email " + usuario.getEmail());
@@ -58,7 +63,7 @@ public class UsuarioController {
 	@PostMapping("/loginUsuario")
 	@Transactional
 	public ResponseEntity<String> loginUsuario(@RequestBody Usuario usuario) {
-
+		System.out.println("Login");
 		System.out.println("probando el exist" );
 		System.out.println(usuario.getNombre());
 		
