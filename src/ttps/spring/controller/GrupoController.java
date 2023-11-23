@@ -64,57 +64,54 @@ public class GrupoController {
 	@PutMapping("/actualizarGrupo/{id}")
 	@Transactional
 	public ResponseEntity<String> actualizarGrupo(@PathVariable Long id, @RequestBody Grupo nuevoGrupo) {
-	  //  try {
-	        // Verificar si el grupo existe
-	        Grupo grupoExistente = grupoRepository.findById(id);
-			if(grupoExistente != null) {
-				if(nuevoGrupo.getNombre() != null) {
-					System.out.println("Modifica nombre");
-					if (grupoRepository.findByNombre(nuevoGrupo.getNombre()) != null) {
+	        Grupo grupoExistente = grupoRepository.findById(id); //busco el grupo a modificar
+	        String messageOk = "Se modifico: ";
+			if(grupoExistente != null) { //Si lo encontre:
+				//--------Modifica Nombre
+				if(nuevoGrupo.getNombre() != null) { // ingreso nombre?
+					System.out.println("Intenta modificar el nombre");
+					if (grupoRepository.findByNombre(nuevoGrupo.getNombre()) != null) { //--- El nombre ya existe?
 						String message = "Existe grupo con ese nombre";
-						return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST); //corta
 					}
+					messageOk = messageOk+ "nombre, ";
+			        System.out.println("El nombre esta ok se modifica");
 					grupoExistente.setNombre(nuevoGrupo.getNombre());
 				}
-				if(nuevoGrupo.getImagen() != 0) {
-			        System.out.println("Modifica imagen");
-					grupoExistente.setImagen(nuevoGrupo.getImagen());
-				}
 				
-				if(nuevoGrupo.getCategoria().getNombre() != null ) {
-			        System.out.println("Modifica categoria");
+				//--------Modifica imagen 
+				if(nuevoGrupo.getImagen() != 0) {
+			        System.out.println(" modifica imagen");
+			        messageOk = messageOk+ " imagen,";
+					grupoExistente.setImagen(nuevoGrupo.getImagen());
+				}else {
+			        System.out.println("IMAGEN vino null");
+					}
+				
+				
+				//--------Modifica categoria
+				System.out.println(nuevoGrupo.getCategoria());
+				if(nuevoGrupo.getCategoria() != null ) { //vino categoria para modificar
+			        System.out.println("Intenta modificar categoria");
 			        CategoriaGrupo cat = categoriaRepository.findByNombre(nuevoGrupo.getCategoria().getNombre());
-					if (cat == null) {
+					if (cat == null) { 
 						String message = "No existe categoria con ese nombre";
 						return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-					}
+					}else {
+				    messageOk = messageOk+ " cateoria";
 					grupoExistente.setCategoria(cat);
-				}
+					}
+					
+				}else {
+			        System.out.println("categoria vino null");
+					}
+								
 				
-		        grupoRepository.save(grupoExistente);
+				return new ResponseEntity<>(messageOk, HttpStatus.BAD_REQUEST);
 
-			}
-	        
-
-
-  /*
-
-	        // Verificar si ya existe otro grupo con el nuevo nombre
-	        //grupoRepository.findByNombreAndIdNot(nuevoGrupo.getNombre(), id).ifPresent(existingGroup -> {
-
-	        // Actualizar los datos del grupo
-	        grupoExistente.setNombre(nuevoGrupo.getNombre());
-	        grupoExistente.setCategoria(nuevoGrupo.getCategoria());
-	        grupoExistente.setImagen(nuevoGrupo.getImagen());
-
-	        // Guardar el grupo actualizado
-	        grupoRepository.save(grupoExistente);
-
-	        String message = "Grupo actualizado correctamente";
-	        return new ResponseEntity<>(message, HttpStatus.OK);
-	    } catch (Exception e) {
-	        return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
-	    }*/
-			return null;
+			}else {
+				String message = "No existe grupo con ese ID";
+				return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+			} 
 	}
 }
