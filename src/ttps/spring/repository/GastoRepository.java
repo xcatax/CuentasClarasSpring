@@ -12,7 +12,9 @@ import ttps.spring.model.Gasto;
 public interface GastoRepository extends JpaRepository<Gasto, Long> {
 	
 	List<Gasto> findAll(); 
+	
 	Gasto findByNombre (String nombre);
+	
 	Gasto findById (long id);
 
 
