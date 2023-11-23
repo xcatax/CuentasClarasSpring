@@ -5,14 +5,18 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import ttps.spring.model.CategoriaGasto;
 import ttps.spring.model.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 	Usuario findByNombre(String nombre);
-	Usuario findById(long id);
 
+	
+	Usuario findById (long id);
+	
 	List<Usuario> findAll(); 
 	
 	Usuario save(Usuario usuario);

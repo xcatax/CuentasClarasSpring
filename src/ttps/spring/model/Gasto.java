@@ -102,14 +102,14 @@ public class Gasto {
 		this.nombre = nombre;
 	}
 
-	/*
+	
 	public CategoriaGasto getCategoria() {
 		return categoria;
 	}
 	public void setCategoria(CategoriaGasto categoria) {
 		this.categoria = categoria;
 	}
-	*/
+	
 	
 	public double getMonto() {
 		return monto;
@@ -129,18 +129,21 @@ public class Gasto {
 	public void setImagen(byte imagen) {
 		this.imagen = imagen;
 	}
-	/*public List<Usuario> getIntegrantes() {
-		return integrantes;
-	}
-	public void setIntegrantes(List<Usuario> integrantes) {
-		this.integrantes = integrantes;
-	}
+	
 	public Usuario getUsuarioOrigen() {
 		return usuarioOrigen;
 	}
 	public void setUsuarioOrigen(Usuario usuarioOrigen) {
 		this.usuarioOrigen = usuarioOrigen;
 	}
+	
+	/*public List<Usuario> getIntegrantes() {
+		return integrantes;
+	}
+	public void setIntegrantes(List<Usuario> integrantes) {
+		this.integrantes = integrantes;
+	}
+
 	public Division getDivision() {
 		return division;
 	}
