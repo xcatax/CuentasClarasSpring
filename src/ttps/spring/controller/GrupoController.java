@@ -4,6 +4,7 @@ import ttps.spring.model.*;
 import ttps.spring.model.CategoriaGrupo;
 import ttps.spring.repository.CategoriaGrupoRepository;
 import ttps.spring.repository.GrupoRepository;
+import ttps.spring.repository.UsuarioRepository;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +29,14 @@ public class GrupoController {
 	private GrupoRepository grupoRepository;
 	@Autowired
 	private CategoriaGrupoRepository categoriaRepository;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
 	@PostMapping("/crearGrupo")
 	@Transactional
 	public ResponseEntity<String> crearGrupo(@RequestBody Grupo grupo) {
 		try {
-			
+
 			// Verificar si ya existe un grupo con el mismo nombre
 			if (grupoRepository.findByNombre(grupo.getNombre()) != null) {
 				String message = "Existe grupo con ese nombre";
@@ -64,54 +67,89 @@ public class GrupoController {
 	@PutMapping("/actualizarGrupo/{id}")
 	@Transactional
 	public ResponseEntity<String> actualizarGrupo(@PathVariable Long id, @RequestBody Grupo nuevoGrupo) {
-	        Grupo grupoExistente = grupoRepository.findById(id); //busco el grupo a modificar
-	        String messageOk = "Se modifico: ";
-			if(grupoExistente != null) { //Si lo encontre:
-				//--------Modifica Nombre
-				if(nuevoGrupo.getNombre() != null) { // ingreso nombre?
-					System.out.println("Intenta modificar el nombre");
-					if (grupoRepository.findByNombre(nuevoGrupo.getNombre()) != null) { //--- El nombre ya existe?
-						String message = "Existe grupo con ese nombre";
-						return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST); //corta
-					}
-					messageOk = messageOk+ "nombre, ";
-			        System.out.println("El nombre esta ok se modifica");
-					grupoExistente.setNombre(nuevoGrupo.getNombre());
+		Grupo grupoExistente = grupoRepository.findById(id); // busco el grupo a modificar
+		String messageOk = "Se modifico: ";
+		if (grupoExistente != null) { // Si lo encontre:
+			// --------Modifica Nombre
+			if (nuevoGrupo.getNombre() != null) { // ingreso nombre?
+				System.out.println("Intenta modificar el nombre");
+				if (grupoRepository.findByNombre(nuevoGrupo.getNombre()) != null) { // --- El nombre ya existe?
+					String message = "Existe grupo con ese nombre";
+					return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST); // corta
 				}
-				
-				//--------Modifica imagen 
-				if(nuevoGrupo.getImagen() != 0) {
-			        System.out.println(" modifica imagen");
-			        messageOk = messageOk+ " imagen,";
-					grupoExistente.setImagen(nuevoGrupo.getImagen());
-				}else {
-			        System.out.println("IMAGEN vino null");
-					}
-				
-				
-				//--------Modifica categoria
-				System.out.println(nuevoGrupo.getCategoria());
-				if(nuevoGrupo.getCategoria() != null ) { //vino categoria para modificar
-			        System.out.println("Intenta modificar categoria");
-			        CategoriaGrupo cat = categoriaRepository.findByNombre(nuevoGrupo.getCategoria().getNombre());
-					if (cat == null) { 
-						String message = "No existe categoria con ese nombre";
-						return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-					}else {
-				    messageOk = messageOk+ " cateoria";
-					grupoExistente.setCategoria(cat);
-					}
-					
-				}else {
-			        System.out.println("categoria vino null");
-					}
-								
-				
-				return new ResponseEntity<>(messageOk, HttpStatus.BAD_REQUEST);
+				messageOk = messageOk + "nombre, ";
+				System.out.println("El nombre esta ok se modifica");
+				grupoExistente.setNombre(nuevoGrupo.getNombre());
+			}
 
-			}else {
-				String message = "No existe grupo con ese ID";
-				return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-			} 
+			// --------Modifica imagen
+			if (nuevoGrupo.getImagen() != 0) {
+				System.out.println(" modifica imagen");
+				messageOk = messageOk + " imagen,";
+				grupoExistente.setImagen(nuevoGrupo.getImagen());
+			} else {
+				System.out.println("IMAGEN vino null");
+			}
+
+			// --------Modifica categoria
+			System.out.println(nuevoGrupo.getCategoria());
+			if (nuevoGrupo.getCategoria() != null) { // vino categoria para modificar
+				System.out.println("Intenta modificar categoria");
+				CategoriaGrupo cat = categoriaRepository.findByNombre(nuevoGrupo.getCategoria().getNombre());
+				if (cat == null) {
+					String message = "No existe categoria con ese nombre";
+					return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+				} else {
+					messageOk = messageOk + " cateoria";
+					grupoExistente.setCategoria(cat);
+				}
+
+			} else {
+				System.out.println("categoria vino null");
+			}
+
+			return new ResponseEntity<>(messageOk, HttpStatus.OK);
+
+		} else {
+			String message = "No existe grupo con ese ID";
+			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@Transactional
+	@PutMapping("/agregarIntegrante/{idGrupo}")
+	public ResponseEntity<String> agregarIntegrantes(@PathVariable Long idGrupo, @RequestBody Usuario integrante) {
+	    System.out.println("ID del Grupo: " + idGrupo);
+	    System.out.println("Datos del Usuario: " + integrante.getNombre());
+
+	    // Validar la existencia del grupo
+	    Grupo grupo = grupoRepository.findById(idGrupo);
+	    if (grupo == null) {
+	        String message = "No existe grupo con ese ID";
+	        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	    }
+
+	    // Validar la existencia del usuario
+	    Usuario usuario = usuarioRepository.findByNombre(integrante.getNombre());
+	    System.out.println(usuario);
+	    if (usuario == null) {
+	        String message = "No existe usuario con ese nombre";
+	        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	    }
+	    
+	 // Validar si el usuario ya está en el grupo
+	    if (grupo.getIntegrantes().contains(usuario)) {
+	        String message = "El usuario ya pertenece a este grupo";
+	        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	    }
+	    
+	    System.out.println("existe vamos agregar integrante");
+
+	    // Agregar el usuario al grupo
+	    grupo.agregarIntegrante(usuario);
+	    grupoRepository.save(grupo);
+
+	    String message = "Usuario agregado al grupo exitosamente";
+	    return new ResponseEntity<>(message, HttpStatus.OK);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,9 +30,10 @@ public class Grupo {
 	@OneToOne
 	private CategoriaGrupo categoria; 
 	
-	//private List<Gasto> gastos; 
+	// private List<Gasto> gastos;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
+
 	@JoinTable(
 		name = "integrantes_grupo", // Nombre de la tabla intermedia
 		joinColumns = @JoinColumn(name = "grupo_id"), // Define el campo (columna) en la tabla intermedia que se utilizará como clave externa para la entidad Usuario
@@ -106,10 +108,10 @@ public class Grupo {
 	public Gasto cargarGasto(Gasto gasto) {
 		return null;
 	}
-	/*
-	public List<Usuario> verIntegrantes() {
+	
+	public List<Usuario> getIntegrantes() {
 		return integrantes;
-	}
+	}/*
 	public List<Gasto> verGastos() {
 		return gastos;
 	}
