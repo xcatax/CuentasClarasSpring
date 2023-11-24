@@ -87,7 +87,10 @@ public class GrupoController {
 
 	    // Agregar el gasto al grupo
 	    grupo.cargarGasto(gasto);
+	    gasto.setGrupo(grupo);
 	    grupoRepository.save(grupo);
+	    gastoRepository.save(gasto);
+
 
 	    String message = "Gasto agregado al grupo exitosamente";
 	    return new ResponseEntity<>(message, HttpStatus.OK);
