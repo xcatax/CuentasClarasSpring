@@ -13,6 +13,7 @@ import ttps.spring.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 	Usuario findByNombre(String nombre);
+    Usuario findByNombreUsuarioAndContrasena(String nombreUsu, String contrasena);
 
 	
 	Usuario findById (long id);

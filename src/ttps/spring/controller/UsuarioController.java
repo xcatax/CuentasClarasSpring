@@ -10,6 +10,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,35 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
+	
+	@PostMapping("/login")
+	
+	/*
+	 * En el header enviar usuario: unUsr clave: unaClave, 
+	 * si el par es correcto devuelve 200 con un header token: 
+	 * {idUsuario}+’123456’ y en caso contrario 403.
+	 * 
+	 * */
+	  public ResponseEntity<String> login(@RequestHeader("usuario") String usuario, @RequestHeader("clave") String clave) {
+	    System.out.println("usuario por header: "+ usuario );
+	    System.out.println("clave por header: "+ clave );
+	  
+	    //busco en la bd un usuario con esa clave y ese nombre de usuario
+	    Usuario usuarioOk=usuarioRepository.findByNombreUsuarioAndContrasena(usuario, clave);
+	    if (usuarioOk != null) {
+	    	 //creo el token que hay qye mandar a la salida
+	        String token = usuarioOk.getId() + "123456";
+		    HttpHeaders headers = new HttpHeaders();
+	        headers.add("token", token);
+
+	        // Devolver respuesta exitosa (código 200) con el token en el header
+	        return new ResponseEntity<>("Autenticación exitosa", headers, HttpStatus.OK);
+	    }else {
+	    	return new ResponseEntity<>("Autenticación fallida", HttpStatus.FORBIDDEN);
+	    }
+	  }
+	
+	
 	@PostMapping("/registrarUsuario")
 	@Transactional
 	public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
