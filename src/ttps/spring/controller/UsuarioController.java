@@ -55,7 +55,7 @@ public class UsuarioController {
 	  }
 	
 	
-	@PostMapping("/registrarUsuario")
+	@PostMapping("")
 	@Transactional
 	public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
 		System.out.println("Registro");
@@ -83,28 +83,7 @@ public class UsuarioController {
 		// return null;
 	}
 
-	@PostMapping("/loginUsuario")
-	@Transactional
-	public ResponseEntity<String> loginUsuario(@RequestBody Usuario usuario) {
-		/*
-		 * En el header enviar usuario: unUsr clave: unaClave, if (ok) -> devuelve 200
-		 * con un header token: {idUsuario}+’123456’ else -> 403.
-		 */
-		System.out.println("Login");
-		System.out.println("probando el exist");
-		System.out.println(usuario.getNombre());
-
-		/*
-		 * if (usuarioRepository.existsByNombre(usuario.getNombre())) {
-		 * System.out.println("Ya existe un usuario con nombre " + usuario.getNombre());
-		 * return new ResponseEntity<>(HttpStatus.CONFLICT); }
-		 */
-		usuarioRepository.save(usuario);
-		String message = "Se guardó el usuario con éxito";
-		return new ResponseEntity<>(message, HttpStatus.CREATED);
-	}
-
-	@GetMapping("/usuario/{id}")
+	@GetMapping("/{id}")
 	/*
 	 * En el header enviar token: {idUsuario}+’123456’ #200 con los datos del
 	 * usuario #404 si no se encuentra el usuario y #401 en caso de token inválido.

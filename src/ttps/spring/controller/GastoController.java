@@ -32,7 +32,7 @@ public class GastoController {
 	private UsuarioRepository usuarioRepository;
 
 	
-	@PostMapping("/crearGasto")
+	@PostMapping("")
 	@Transactional
 	public ResponseEntity<String> crearGasto(@RequestBody Gasto gasto) {
 	
@@ -67,7 +67,7 @@ public class GastoController {
 	}
 	
 	
-	@PutMapping("/actualizarGasto/{id}")
+	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<String> actualizarGasto(@PathVariable Long id, @RequestBody Gasto nuevoGasto) {
 		        Gasto gastoExistente = gastoRepository.findById(id); //busco el grupo a modificar

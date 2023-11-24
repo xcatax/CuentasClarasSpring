@@ -41,7 +41,10 @@ public class GrupoController {
 
 	//@Query("SELECT g.nombre from Gasto g INNER JOIN Grupo gr ON g.grupoId = gr.id")
     //List<Gasto> findAllGastos();
-	@GetMapping("/obtenerGastos/{idGrupo}")
+	//get/grupos/{idGrupo}/gastos
+	
+	//obtenerGastos
+	@GetMapping("{idGrupo}/gastos")
 	public List<Gasto> obtenerGastos(@PathVariable Long idGrupo) {
 		System.out.println("listar gastos");
 	    Grupo grupo = grupoRepository.findById(idGrupo);
@@ -56,8 +59,8 @@ public class GrupoController {
 	}
 
 	
-	@Transactional
-	@PutMapping("/agregarGasto/{idGrupo}")
+	@Transactional //este deberia ser post post/{idGrupo}
+	@PostMapping("/{idGrupo}")
 	public ResponseEntity<String> agregarGasto(@PathVariable Long idGrupo, @RequestBody Gasto nuevoGasto) {
 	    System.out.println("ID del Grupo: " + idGrupo);
 	    System.out.println("Datos del gasto: " + nuevoGasto.getNombre());
@@ -97,7 +100,7 @@ public class GrupoController {
 	}
 	
 	
-	@PostMapping("/crearGrupo")
+	@PostMapping()
 	@Transactional
 	public ResponseEntity<String> crearGrupo(@RequestBody Grupo grupo) {
 		try {
@@ -132,7 +135,7 @@ public class GrupoController {
 	
 	
 
-	@PutMapping("/actualizarGrupo/{id}")
+	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<String> actualizarGrupo(@PathVariable Long id, @RequestBody Grupo nuevoGrupo) {
 		Grupo grupoExistente = grupoRepository.findById(id); // busco el grupo a modificar
@@ -185,7 +188,7 @@ public class GrupoController {
 	}
 	
 	@Transactional
-	@PutMapping("/agregarIntegrante/{idGrupo}")
+	@PutMapping("/{idGrupo}/usuario")
 	public ResponseEntity<String> agregarIntegrantes(@PathVariable Long idGrupo, @RequestBody Usuario integrante) {
 	    System.out.println("ID del Grupo: " + idGrupo);
 	    System.out.println("Datos del Usuario: " + integrante.getNombre());

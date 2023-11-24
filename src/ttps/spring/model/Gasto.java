@@ -41,7 +41,7 @@ public class Gasto {
 	@OneToOne
 	private Usuario usuarioOrigen;
 		
-	 @ManyToOne(fetch = FetchType.LAZY)
+	 @ManyToOne(fetch = FetchType.EAGER)
 	    @JoinColumn(name = "grupo_id")
 	    private Grupo grupo;
 	
