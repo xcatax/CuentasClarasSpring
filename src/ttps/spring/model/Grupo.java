@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 @Entity
@@ -30,7 +31,8 @@ public class Grupo {
 	@OneToOne
 	private CategoriaGrupo categoria; 
 	
-	// private List<Gasto> gastos;
+	 @OneToMany(mappedBy = "grupo")
+	    private List<Gasto> gastos = new ArrayList<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 
@@ -105,16 +107,20 @@ public class Grupo {
 	   // usuario.getGrupos().add(this); // Agregar el grupo a la lista de grupos del usuario
 	}
 	
-	public Gasto cargarGasto(Gasto gasto) {
-		return null;
+	public void cargarGasto(Gasto gasto) {
+	    this.gastos.add(gasto); 
 	}
 	
 	public List<Usuario> getIntegrantes() {
 		return integrantes;
-	}/*
-	public List<Gasto> verGastos() {
+	}
+	
+	public List<Gasto> getGastos() {
 		return gastos;
 	}
-*/
+
+	public void setGastos(List<Gasto> gastos) {
+		this.gastos = gastos;
+	}
 
 }

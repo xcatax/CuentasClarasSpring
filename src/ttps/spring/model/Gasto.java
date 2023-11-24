@@ -6,12 +6,14 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 @Entity
@@ -39,6 +41,28 @@ public class Gasto {
 	@OneToOne
 	private Usuario usuarioOrigen;
 		
+	 @ManyToOne(fetch = FetchType.LAZY)
+	    @JoinColumn(name = "grupo_id")
+	    private Grupo grupo;
+	
+	public Grupo getGrupo() {
+		return grupo;
+	}
+
+
+	public void setGrupo(Grupo grupo) {
+		this.grupo = grupo;
+	}
+
+
+	public List<Usuario> getIntegrantes() {
+		return integrantes;
+	}
+
+
+	public void setIntegrantes(List<Usuario> integrantes) {
+		this.integrantes = integrantes;
+	}
 	@ManyToMany
     @JoinTable(
         name = "integrantes_gasto",

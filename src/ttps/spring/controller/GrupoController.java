@@ -1,8 +1,11 @@
 package ttps.spring.controller;
 
 import ttps.spring.model.*;
+import ttps.spring.model.Gasto;
+
 import ttps.spring.model.CategoriaGrupo;
 import ttps.spring.repository.CategoriaGrupoRepository;
+import ttps.spring.repository.GastoRepository;
 import ttps.spring.repository.GrupoRepository;
 import ttps.spring.repository.UsuarioRepository;
 
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+
 import org.springframework.http.MediaType; // Asegúrate de importar MediaType
 
 @RestController
@@ -31,7 +36,64 @@ public class GrupoController {
 	private CategoriaGrupoRepository categoriaRepository;
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	@Autowired
+	private GastoRepository gastoRepository;
 
+	//@Query("SELECT g.nombre from Gasto g INNER JOIN Grupo gr ON g.grupoId = gr.id")
+    //List<Gasto> findAllGastos();
+	@GetMapping("/obtenerGastos/{idGrupo}")
+	public List<Gasto> obtenerGastos(@PathVariable Long idGrupo) {
+		System.out.println("listar gastos");
+	    Grupo grupo = grupoRepository.findById(idGrupo);
+	    if(grupo != null) {
+	    	System.out.println("grupo: " + grupo);
+			List<Gasto> gastos = grupoRepository.findAllGastos(grupo.getId());			
+			System.out.println("gastos: " + gastos);
+			//return grupoRepository.findAllGastos(grupo.getId());
+			 return gastos;	    
+	    }
+	    return null;
+	}
+
+	
+	@Transactional
+	@PutMapping("/agregarGasto/{idGrupo}")
+	public ResponseEntity<String> agregarGasto(@PathVariable Long idGrupo, @RequestBody Gasto nuevoGasto) {
+	    System.out.println("ID del Grupo: " + idGrupo);
+	    System.out.println("Datos del gasto: " + nuevoGasto.getNombre());
+
+	    // Validar la existencia del grupo
+	    Grupo grupo = grupoRepository.findById(idGrupo);
+	    if (grupo == null) {
+	        String message = "No existe grupo con ese ID";
+	        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	    }
+
+	    // Validar la existencia del gasto
+	    Gasto gasto = gastoRepository.findByNombre(nuevoGasto.getNombre());
+	    System.out.println(gasto);
+	    if (gasto == null) {
+	        String message = "No existe gasto con ese nombre";
+	        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	    }
+	    
+	 // Validar si el gasto ya está en el grupo
+	    if (grupo.getGastos().contains(gasto)) {  //gesGastos seguro hay que agregarlo 
+	        String message = "El gasto ya pertenece a este grupo";
+	        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	    }
+	    
+	    System.out.println("existe vamos agregar gasto");
+
+	    // Agregar el gasto al grupo
+	    grupo.cargarGasto(gasto);
+	    grupoRepository.save(grupo);
+
+	    String message = "Gasto agregado al grupo exitosamente";
+	    return new ResponseEntity<>(message, HttpStatus.OK);
+	}
+	
+	
 	@PostMapping("/crearGrupo")
 	@Transactional
 	public ResponseEntity<String> crearGrupo(@RequestBody Grupo grupo) {
@@ -63,6 +125,9 @@ public class GrupoController {
 		return grupoRepository.findAll();
 		// return null;
 	}
+	
+	
+	
 
 	@PutMapping("/actualizarGrupo/{id}")
 	@Transactional
