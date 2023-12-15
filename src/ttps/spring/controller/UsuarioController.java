@@ -19,7 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.MediaType; // Asegúrate de importar MediaType
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+
 @RestController
+@CrossOrigin(origins = "http://localhost:4200") 
 @RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsuarioController {
 
@@ -35,7 +44,7 @@ public class UsuarioController {
 	 * {idUsuario}+’123456’ y en caso contrario 403.
 	 * 
 	 * */
-	  public ResponseEntity<String> login(@RequestHeader("usuario") String usuario, @RequestHeader("clave") String clave) {
+/*	  public ResponseEntity<String> login(@RequestHeader("usuario") String usuario, @RequestHeader("clave") String clave) {
 	    System.out.println("usuario por header: "+ usuario );
 	    System.out.println("clave por header: "+ clave );
 	  
@@ -48,12 +57,31 @@ public class UsuarioController {
 	        headers.add("token", token);
 
 	        // Devolver respuesta exitosa (código 200) con el token en el header
-	        return new ResponseEntity<>("Autenticación exitosa", headers, HttpStatus.OK);
+	        return new ResponseEntity<String>("Autenticación exitosa", headers, HttpStatus.OK);
 	    }else {
-	    	return new ResponseEntity<>("Autenticación fallida", HttpStatus.FORBIDDEN);
+	    	return new ResponseEntity<String>("Autenticación fallida", HttpStatus.FORBIDDEN);
 	    }
 	  }
-	
+	*/
+	 public ResponseEntity<Usuario> login(@RequestHeader("usuario") String usuario, @RequestHeader("clave") String clave) {
+		    System.out.println("usuario por header: "+ usuario );
+		    System.out.println("clave por header: "+ clave );
+		  
+		    //busco en la bd un usuario con esa clave y ese nombre de usuario
+		    Usuario usuarioOk=usuarioRepository.findByNombreUsuarioAndContrasena(usuario, clave);
+		    if (usuarioOk != null) {
+		    	 //creo el token que hay qye mandar a la salida
+		        String token = usuarioOk.getId() + "123456";
+			    HttpHeaders headers = new HttpHeaders();
+		        headers.add("token", token);
+		     
+		        
+		        // Devolver respuesta exitosa (código 200) con el token en el header
+		        return new ResponseEntity<Usuario>(usuarioOk, HttpStatus.OK);
+		    }else {
+		    	return new ResponseEntity<Usuario>(HttpStatus.NOT_FOUND);
+		    }
+		  }
 	
 	@PostMapping("")
 	@Transactional
