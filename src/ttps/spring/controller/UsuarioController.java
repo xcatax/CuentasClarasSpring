@@ -85,7 +85,30 @@ public class UsuarioController {
 	
 	@PostMapping("")
 	@Transactional
-	public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
+	public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario usuarioParams) {
+		System.out.println("Registro");
+		if (usuarioParams == null) {
+			System.out.println("No se han proporcionado parámetros");
+			String message = "No se han proporcionado parámetros";
+			return new ResponseEntity<Usuario>(HttpStatus.BAD_REQUEST);
+		}
+		// System.out.println("Creando el usuario " + usuario.getEmail());
+		Usuario usu = usuarioRepository.findByEmail(usuarioParams.getEmail());
+		if (usu != null) {
+			System.out.println("Ya existe un usuario con email " + usuarioParams.getEmail());
+			//String message = "Ya existe un usuario con nombre ";
+			return new ResponseEntity<Usuario>( HttpStatus.CONFLICT);
+		}
+		Usuario usuNuevo= usuarioRepository.save(usuarioParams);
+		//String message = "Se guardó el usuario con éxito";
+		return new ResponseEntity<Usuario>(usuNuevo, HttpStatus.CREATED);
+	}
+	
+	
+	
+	
+	
+/*	public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
 		System.out.println("Registro");
 		if (usuario == null) {
 			System.out.println("No se han proporcionado parámetros");
@@ -102,7 +125,7 @@ public class UsuarioController {
 		usuarioRepository.save(usuario);
 		String message = "Se guardó el usuario con éxito";
 		return new ResponseEntity<>(message, HttpStatus.CREATED);
-	}
+	}*/
 
 	@GetMapping("/listarTodos")
 	public List<Usuario> usuario() {
