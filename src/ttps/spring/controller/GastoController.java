@@ -12,15 +12,13 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.MediaType; // Asegúrate de importar MediaType
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200") 
 @RequestMapping(value = "/gastos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GastoController {
 
@@ -32,7 +30,7 @@ public class GastoController {
 	private UsuarioRepository usuarioRepository;
 
 	
-	@PostMapping("")
+	/*@PostMapping("")
 	@Transactional
 	public ResponseEntity<String> crearGasto(@RequestBody Gasto gasto) {
 	
@@ -58,7 +56,55 @@ public class GastoController {
 		} catch (Exception e) {
 			return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}*/
+	
+	@PostMapping("")
+	@Transactional
+	public ResponseEntity<Gasto> crearGasto(@RequestBody Gasto gasto) {
+	
+		try {
+			CategoriaGasto cat = categoriaRepository.findById(gasto.getCategoria().getId());
+			if (cat == null) {
+
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			gasto.setCategoria(cat);
+			
+			// Buscar usuario 
+			Usuario usu = usuarioRepository.findById(gasto.getUsuarioOrigen().getId());
+			if (usu == null) {
+				String message = "No existe esa Usuario";
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			gasto.setUsuarioOrigen(usu);
+			
+			Gasto gastoOk = gastoRepository.save(gasto);
+			 
+			return new ResponseEntity<Gasto>(gastoOk, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<Gasto>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
+	
+	 public ResponseEntity<Usuario> login(@RequestHeader("usuario") String usuario, @RequestHeader("clave") String clave) {
+		    System.out.println("usuario por header: "+ usuario );
+		    System.out.println("clave por header: "+ clave );
+		  
+		    //busco en la bd un usuario con esa clave y ese nombre de usuario
+		    Usuario usuarioOk=usuarioRepository.findByNombreUsuarioAndContrasena(usuario, clave);
+		    if (usuarioOk != null) {
+		    	 //creo el token que hay qye mandar a la salida
+		        String token = usuarioOk.getId() + "123456";
+			    HttpHeaders headers = new HttpHeaders();
+		        headers.add("token", token);
+		     
+		        
+		        // Devolver respuesta exitosa (código 200) con el token en el header
+		        return new ResponseEntity<Usuario>(usuarioOk, HttpStatus.OK);
+		    }else {
+		    	return new ResponseEntity<Usuario>(HttpStatus.NOT_FOUND);
+		    }
+		  }
 	
 	@GetMapping("/listarTodos")
 	public List<Gasto> gasto() {

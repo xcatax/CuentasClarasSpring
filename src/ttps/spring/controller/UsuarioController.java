@@ -105,11 +105,14 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/listarTodos")
-	public List<Usuario> usuario() {
-		System.out.println("listar");
-		return usuarioRepository.findAll();
+	 public ResponseEntity<List<Usuario>> listarUsuarios() {
+        System.out.println("listar");
+        List<Usuario> usuarios = usuarioRepository.findAll(); // Obtener todos los usuarios del repositorio
+        return ResponseEntity.ok(usuarios); // Retornar una respuesta con la lista de usuarios
+    }
+		//return usuarioRepository.findAll();
 		// return null;
-	}
+	
 
 	@GetMapping("/{id}")
 	/*
