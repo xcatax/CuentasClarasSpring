@@ -121,7 +121,7 @@ public class GastoController {
 	
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<String> actualizarGasto(@PathVariable Long id, @RequestBody Gasto nuevoGasto) {
+	public ResponseEntity<Gasto> actualizarGasto(@PathVariable Long id, @RequestBody Gasto nuevoGasto) {
 		        Gasto gastoExistente = gastoRepository.findById(id); //busco el grupo a modificar
 		        String messageOk = "Se modifico: ";
 				if(gastoExistente != null) { //Si lo encontre:
@@ -130,7 +130,7 @@ public class GastoController {
 						System.out.println("Intenta modificar el nombre");
 						if (gastoRepository.findByNombre(nuevoGasto.getNombre()) != null) { //--- El nombre ya existe?
 							String message = "Existe gasto con ese nombre";
-							return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST); //corta
+							return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //corta
 						}
 						messageOk = messageOk+ "nombre, ";
 				        System.out.println("El nombre esta ok se modifica");
@@ -154,7 +154,7 @@ public class GastoController {
 				        CategoriaGasto cat = categoriaRepository.findByNombre(nuevoGasto.getCategoria().getNombre());
 						if (cat == null) { 
 							String message = "No existe categoria con ese nombre";
-							return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+							return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 						}else {
 					    messageOk = messageOk+ " categoria,";
 					    gastoExistente.setCategoria(cat);
@@ -170,7 +170,7 @@ public class GastoController {
 				        Usuario usu = usuarioRepository.findByNombre(nuevoGasto.getUsuarioOrigen().getNombre());
 						if (usu == null) { 
 							String message = "No existe usuario con ese nombre";
-							return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+							return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 						}else {
 					    messageOk = messageOk+ " usuario";
 					    gastoExistente.setUsuarioOrigen(usu);
@@ -181,11 +181,11 @@ public class GastoController {
 						}
 									
 					
-					return new ResponseEntity<>(messageOk, HttpStatus.OK);
+					return new ResponseEntity<Gasto>(HttpStatus.OK);
 
 				}else {
 					String message = "No existe gasto con ese ID";
-					return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				} 
 		}
 }
