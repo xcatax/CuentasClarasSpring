@@ -106,10 +106,16 @@ public class GastoController {
 		    }
 		  }
 	
-	@GetMapping("/listarTodos")
+	/*@GetMapping("/listarTodos")
 	public List<Gasto> gasto() {
 		System.out.println("listar");
 		return gastoRepository.findAll();
+	}*/
+	
+	@GetMapping("/listarCategorias")
+	public List<CategoriaGasto> categoriaGasto() {
+		System.out.println("listar");
+		return categoriaRepository.findAll();
 	}
 	
 	
