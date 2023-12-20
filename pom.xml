@@ -90,11 +90,12 @@
 		</dependency>
 
 		<!-- Dependencia a tu propio proyecto (CuentasClaras) -->
-		<dependency>
+	<!--	<dependency>
 			<groupId>CuentasClaras</groupId>
 			<artifactId>CuentasClaras</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+-->
 	</dependencies>
 
 	<build>
