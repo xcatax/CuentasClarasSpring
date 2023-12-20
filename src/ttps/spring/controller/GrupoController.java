@@ -125,13 +125,19 @@ public class GrupoController {
 		}
 	}
 
-	@GetMapping("/listarTodos")
+	/*@GetMapping("/listarTodos")
 	public List<Grupo> grupo() {
 		System.out.println("listar");
 		return grupoRepository.findAll();
 		// return null;
 	}
-	
+	*/
+	@GetMapping("/listarTodos")
+	public ResponseEntity<List<Grupo>> listarGrupos() {
+	    System.out.println("listar");
+	    List<Grupo> grupos = grupoRepository.findAll(); // Obtener todos los grupos del repositorio
+	    return ResponseEntity.ok(grupos);
+	}
 	
 	
 

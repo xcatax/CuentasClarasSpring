@@ -22,7 +22,9 @@ public interface GrupoRepository extends JpaRepository<Grupo, Long> {
     @Query("SELECT CASE WHEN COUNT(g) > 0 THEN true ELSE false END FROM Grupo g WHERE g.nombre = ?1")
     boolean existsByNombre(String nombre);
     
-    @Query("SELECT g.nombre from Gasto g  WHERE g.grupo.id = ?1")
-    List<Gasto> findAllGastos(long idGrupo);
+  /*  @Query("SELECT g.nombre from Gasto g  WHERE g.grupo.id = ?1")
+    List<Gasto> findAllGastos(long idGrupo);*/
 
+    @Query("SELECT g FROM Gasto g WHERE g.grupo.id = ?1")
+    List<Gasto> findAllGastos(long idGrupo);
 }
