@@ -13,6 +13,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ttps.spring.model.*;
 
 
@@ -46,10 +49,10 @@ public class Usuario {
         inverseJoinColumns = @JoinColumn(name = "amigo_id")
     )
     private List<Usuario> amigos= new ArrayList<>();
-	
+	@JsonIgnore
 	@ManyToMany(mappedBy="integrantes", fetch = FetchType.EAGER)
     private List<Grupo> grupos= new ArrayList<>();
-    
+	@JsonIgnore
     @ManyToMany(mappedBy="integrantes")
     private List<Gasto> gastos= new ArrayList<>();
 	//private List<Saldo> saldos; 

@@ -16,6 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "gasto")
 public class Gasto {
@@ -40,7 +42,8 @@ public class Gasto {
 	
 	@OneToOne
 	private Usuario usuarioOrigen;
-		
+	
+	 @JsonIgnore
 	 @ManyToOne(fetch = FetchType.EAGER)
 	    @JoinColumn(name = "grupo_id")
 	    private Grupo grupo;
@@ -63,6 +66,8 @@ public class Gasto {
 	public void setIntegrantes(List<Usuario> integrantes) {
 		this.integrantes = integrantes;
 	}
+	
+	@JsonIgnore
 	@ManyToMany
     @JoinTable(
         name = "integrantes_gasto",

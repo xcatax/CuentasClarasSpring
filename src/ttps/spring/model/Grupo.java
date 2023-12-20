@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="grupo")
 public class Grupo {
@@ -31,8 +33,10 @@ public class Grupo {
 	@OneToOne
 	private CategoriaGrupo categoria; 
 	
+	 @JsonIgnore
 	 @OneToMany(mappedBy = "grupo")
 	    private List<Gasto> gastos = new ArrayList<>();
+	
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 
