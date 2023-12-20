@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType; // Asegúrate de importar MediaType
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200") 
@@ -117,7 +118,6 @@ public class GastoController {
 		System.out.println("listar");
 		return categoriaRepository.findAll();
 	}
-	
 	
 	@PutMapping("/{id}")
 	@Transactional
