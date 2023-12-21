@@ -105,11 +105,12 @@ public class Gasto {
 	public Gasto() {
 		
 	}
-	Date date = new Date();
+	
+	
 	//constructor completo -> resto de paramtros , CategoriaGasto categoria, Usuario usuarioOrigen, List<Usuario> integrantes, Division division
-	public Gasto(String nombre, double monto, CategoriaGasto categoria, Usuario usuarioOrigen, byte imagen) {
+	public Gasto(String nombre, double monto,Date fecha, CategoriaGasto categoria, Usuario usuarioOrigen, byte imagen) {
 	    this.nombre = nombre;
-	    this.fecha =  date; 
+	    this.fecha =  fecha; 
 	    this.monto = monto;
 	    this.imagen = imagen;	   
 	    this.categoria = categoria;

@@ -107,11 +107,11 @@ public class GastoController {
 		    }
 		  }
 	
-	/*@GetMapping("/listarTodos")
+	@GetMapping("/listarTodos")
 	public List<Gasto> gasto() {
-		System.out.println("listar");
+		System.out.println("listar todos los gastos");
 		return gastoRepository.findAll();
-	}*/
+	}
 	
 	@GetMapping("/listarCategorias")
 	public List<CategoriaGasto> categoriaGasto() {
@@ -176,6 +176,29 @@ public class GastoController {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				} 
 		}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Gasto> obtenerGastoPorId(@PathVariable Long id) {
+        System.out.println("------- Mostrar un gasto con id: --------");
+        System.out.println(id);
+
+	    try {
+	    	
+	        Gasto gasto = gastoRepository.findById(id);
+	        System.out.println(gasto);
+
+	        
+	        if (gasto != null) {
+	            return new ResponseEntity<>(gasto, HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
+	    } catch (Exception e) {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+
+
 }
 				
 
