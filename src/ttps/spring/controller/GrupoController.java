@@ -54,7 +54,7 @@ public class GrupoController {
 	
 	@Transactional //este deberia ser post post/{idGrupo}
 	@PostMapping("/{idGrupo}")
-	public ResponseEntity<String> agregarGasto(@PathVariable Long idGrupo, @RequestBody Gasto nuevoGasto) {
+	public ResponseEntity<Grupo> agregarGasto(@PathVariable Long idGrupo, @RequestBody Gasto nuevoGasto) {
 	    System.out.println("ID del Grupo: " + idGrupo);
 	    System.out.println("Datos del gasto: " + nuevoGasto.getNombre());
 
@@ -62,7 +62,7 @@ public class GrupoController {
 	    Grupo grupo = grupoRepository.findById(idGrupo);
 	    if (grupo == null) {
 	        String message = "No existe grupo con ese ID";
-	        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	        return new ResponseEntity<Grupo>( HttpStatus.BAD_REQUEST);
 	    }
 
 	    // Validar la existencia del gasto
@@ -70,13 +70,13 @@ public class GrupoController {
 	    System.out.println(gasto);
 	    if (gasto == null) {
 	        String message = "No existe gasto con ese nombre";
-	        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	        return new ResponseEntity<Grupo>( HttpStatus.BAD_REQUEST);
 	    }
 	    
 	 // Validar si el gasto ya está en el grupo
 	    if (grupo.getGastos().contains(gasto)) {  //gesGastos seguro hay que agregarlo 
 	        String message = "El gasto ya pertenece a este grupo";
-	        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+	        return new ResponseEntity<Grupo>( HttpStatus.BAD_REQUEST);
 	    }
 	    
 	    System.out.println("existe vamos agregar gasto");
@@ -84,12 +84,12 @@ public class GrupoController {
 	    // Agregar el gasto al grupo
 	    grupo.cargarGasto(gasto);
 	    gasto.setGrupo(grupo);
-	    grupoRepository.save(grupo);
+	    Grupo g = grupoRepository.save(grupo);
 	    gastoRepository.save(gasto);
 
 
 	    String message = "Gasto agregado al grupo exitosamente";
-	    return new ResponseEntity<>(message, HttpStatus.OK);
+	    return new ResponseEntity<Grupo>(g, HttpStatus.OK);
 	}
 	
 	@GetMapping("/listarCategorias")
@@ -107,7 +107,7 @@ public class GrupoController {
 			if (grupoRepository.findByNombre(grupo.getNombre()) != null) {
 				String message = "Existe grupo con ese nombre";
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
+			}a
 			// Buscar la categoría
 			CategoriaGrupo cat = categoriaRepository.findByNombre(grupo.getCategoria().getNombre());
 			if (cat == null) {
