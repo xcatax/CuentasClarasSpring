@@ -107,11 +107,11 @@ public class GastoController {
 		    }
 		  }
 	
-	/*@GetMapping("/listarTodos")
+	@GetMapping("/listarTodos")
 	public List<Gasto> gasto() {
-		System.out.println("listar");
+		System.out.println("listar todos los gastos");
 		return gastoRepository.findAll();
-	}*/
+	}
 	
 	@GetMapping("/listarCategorias")
 	public List<CategoriaGasto> categoriaGasto() {
@@ -121,31 +121,25 @@ public class GastoController {
 	
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<Gasto> actualizarGasto(@PathVariable Long id, @RequestBody Gasto nuevoGasto) {
+	public ResponseEntity<Object> actualizarGasto(@PathVariable Long id, @RequestBody Gasto nuevoGasto) {
+		
+		
 		        Gasto gastoExistente = gastoRepository.findById(id); //busco el grupo a modificar
-		        String messageOk = "Se modifico: ";
 				if(gastoExistente != null) { //Si lo encontre:
 					//--------Modifica Nombre
 					if(nuevoGasto.getNombre() != null) { // ingreso nombre?
 						System.out.println("Intenta modificar el nombre");
-						if (gastoRepository.findByNombre(nuevoGasto.getNombre()) != null) { //--- El nombre ya existe?
-							String message = "Existe gasto con ese nombre";
-							return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //corta
-						}
-						messageOk = messageOk+ "nombre, ";
-				        System.out.println("El nombre esta ok se modifica");
+				
 				        gastoExistente.setNombre(nuevoGasto.getNombre());
 					}
 					
 					//--------Modifica imagen 
 					if(nuevoGasto.getImagen() != 0) {
 				        System.out.println(" modifica imagen");
-				        messageOk = messageOk+ " imagen,";
 				        gastoExistente.setImagen(nuevoGasto.getImagen());
 					}else {
 				        System.out.println("IMAGEN vino null");
 						}
-					
 					
 					//--------Modifica categoria
 					System.out.println(nuevoGasto.getCategoria());
@@ -153,10 +147,8 @@ public class GastoController {
 				        System.out.println("Intenta modificar categoria");
 				        CategoriaGasto cat = categoriaRepository.findByNombre(nuevoGasto.getCategoria().getNombre());
 						if (cat == null) { 
-							String message = "No existe categoria con ese nombre";
 							return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 						}else {
-					    messageOk = messageOk+ " categoria,";
 					    gastoExistente.setCategoria(cat);
 						}
 						
@@ -169,25 +161,44 @@ public class GastoController {
 				        System.out.println("Intenta modificar usuario");
 				        Usuario usu = usuarioRepository.findByNombre(nuevoGasto.getUsuarioOrigen().getNombre());
 						if (usu == null) { 
-							String message = "No existe usuario con ese nombre";
+			
 							return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 						}else {
-					    messageOk = messageOk+ " usuario";
 					    gastoExistente.setUsuarioOrigen(usu);
 						}
 						
 					}else {
 				        System.out.println("usuario vino null");
 						}
-									
-					
-					return new ResponseEntity<Gasto>(HttpStatus.OK);
+					return (ResponseEntity<Object>) new ResponseEntity<>(HttpStatus.OK);
 
 				}else {
-					String message = "No existe gasto con ese ID";
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 				} 
 		}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Gasto> obtenerGastoPorId(@PathVariable Long id) {
+        System.out.println("------- Mostrar un gasto con id: --------");
+        System.out.println(id);
+
+	    try {
+	    	
+	        Gasto gasto = gastoRepository.findById(id);
+	        System.out.println(gasto);
+
+	        
+	        if (gasto != null) {
+	            return new ResponseEntity<>(gasto, HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
+	    } catch (Exception e) {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+
+
 }
 				
 
