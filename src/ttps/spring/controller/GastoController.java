@@ -123,8 +123,10 @@ public class GastoController {
 	@Transactional
 	public ResponseEntity<Object> actualizarGasto(@PathVariable Long id, @RequestBody Gasto nuevoGasto) {
 		
-		
+				
 		        Gasto gastoExistente = gastoRepository.findById(id); //busco el grupo a modificar
+				System.out.print("nuevi"+nuevoGasto.getFecha());
+				System.out.print("ecistente"+gastoExistente.getFecha());
 				if(gastoExistente != null) { //Si lo encontre:
 					//--------Modifica Nombre
 					if(nuevoGasto.getNombre() != null) { // ingreso nombre?
@@ -140,9 +142,16 @@ public class GastoController {
 					}else {
 				        System.out.println("IMAGEN vino null");
 						}
+					//--------Modifica fecha 
+					if(nuevoGasto.getFecha() != null) {
+				        System.out.println(" modifica fecha");
+				        gastoExistente.setFecha(nuevoGasto.getFecha());
+					}else {
+				        System.out.println("fecha vino null");
+						}
 					
 					//--------Modifica categoria
-					System.out.println(nuevoGasto.getCategoria());
+					System.out.println(nuevoGasto.getCategoria().getNombre());
 					if(nuevoGasto.getCategoria() != null ) { //vino categoria para modificar
 				        System.out.println("Intenta modificar categoria");
 				        CategoriaGasto cat = categoriaRepository.findByNombre(nuevoGasto.getCategoria().getNombre());
