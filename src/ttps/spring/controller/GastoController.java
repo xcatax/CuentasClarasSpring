@@ -150,6 +150,17 @@ public class GastoController {
 				        System.out.println("fecha vino null");
 						}
 					
+					//--------Modifica monto
+
+					if(nuevoGasto.getMonto() != 0) {
+				        System.out.println(" modifica monto");
+				        gastoExistente.setMonto(nuevoGasto.getMonto());
+					}else {
+				        System.out.println("monto vino null");
+						}
+
+					
+					
 					//--------Modifica categoria
 					System.out.println(nuevoGasto.getCategoria().getNombre());
 					if(nuevoGasto.getCategoria() != null ) { //vino categoria para modificar
