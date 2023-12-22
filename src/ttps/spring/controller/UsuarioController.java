@@ -28,14 +28,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200") 
+@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS}, allowedHeaders = "*")
 @RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsuarioController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
-	
 	@PostMapping("/login")
 	
 	/*
@@ -44,25 +43,7 @@ public class UsuarioController {
 	 * {idUsuario}+’123456’ y en caso contrario 403.
 	 * 
 	 * */
-/*	  public ResponseEntity<String> login(@RequestHeader("usuario") String usuario, @RequestHeader("clave") String clave) {
-	    System.out.println("usuario por header: "+ usuario );
-	    System.out.println("clave por header: "+ clave );
-	  
-	    //busco en la bd un usuario con esa clave y ese nombre de usuario
-	    Usuario usuarioOk=usuarioRepository.findByNombreUsuarioAndContrasena(usuario, clave);
-	    if (usuarioOk != null) {
-	    	 //creo el token que hay qye mandar a la salida
-	        String token = usuarioOk.getId() + "123456";
-		    HttpHeaders headers = new HttpHeaders();
-	        headers.add("token", token);
 
-	        // Devolver respuesta exitosa (código 200) con el token en el header
-	        return new ResponseEntity<String>("Autenticación exitosa", headers, HttpStatus.OK);
-	    }else {
-	    	return new ResponseEntity<String>("Autenticación fallida", HttpStatus.FORBIDDEN);
-	    }
-	  }
-	*/
 	 public ResponseEntity<Usuario> login(@RequestHeader("usuario") String usuario, @RequestHeader("clave") String clave) {
 		    System.out.println("usuario por header: "+ usuario );
 		    System.out.println("clave por header: "+ clave );

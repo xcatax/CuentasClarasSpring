@@ -19,7 +19,7 @@ import org.springframework.http.MediaType; // Asegúrate de importar MediaType
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200") 
+//@CrossOrigin(origins = "http://localhost:4200") 
 @RequestMapping(value = "/gastos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GastoController {
 

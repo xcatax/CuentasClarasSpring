@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType; // Asegúrate de importar MediaType
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-@CrossOrigin(origins = "http://localhost:4200") 
+//@CrossOrigin(origins = "http://localhost:4200") 
 @RestController
 @RequestMapping(value = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GrupoController {
@@ -107,7 +107,7 @@ public class GrupoController {
 			if (grupoRepository.findByNombre(grupo.getNombre()) != null) {
 				String message = "Existe grupo con ese nombre";
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}a
+			}
 			// Buscar la categoría
 			CategoriaGrupo cat = categoriaRepository.findByNombre(grupo.getCategoria().getNombre());
 			if (cat == null) {
